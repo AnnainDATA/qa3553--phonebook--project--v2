@@ -1,7 +1,7 @@
 #pytest -v tests/test_registration.py
 import time
 
-from data.user_data import create_user
+from data.user_data import create_user, exiting_user, invalid_email_user, invalid_password_user
 from pages.registration_page import RegistrationPage
 from models.user import User
 
@@ -17,9 +17,9 @@ def generate_unique_email():
 #-------1. Unregistered user can register with valid data------
 def test_registration_success(driver):
     registration_page = RegistrationPage(driver)
-    user = create_user(email = generate_unique_email(), password = "123456!Anna")
+    user = exiting_user()
     registration_page.open_registration_form()
-    registration_page.fill_email(user.email)
+    registration_page.fill_email(generate_unique_email())
     registration_page.fill_password(user.password)
     registration_page.submit_registration()
 
@@ -41,10 +41,7 @@ def test_registration_wrong_email(driver):
 #-------3. Unregistered user can`t register with valid email and invalid password------
 def test_registration_wrong_password(driver):
     registration_page = RegistrationPage(driver)
-    user = User(
-        generate_unique_email(),
-        "000"
-    )
+    user = invalid_password_user()
     registration_page.open_registration_form()
     registration_page.fill_email(user.email)
     registration_page.fill_password(user.password)
@@ -56,10 +53,11 @@ def test_registration_wrong_password(driver):
 #-------4. Registered user can`t register with registered data (email and password)------
 def test_registration_exists_user(driver):
     registration_page = RegistrationPage(driver)
+    user = exiting_user()
 
     registration_page.open_registration_form()
-    registration_page.fill_email(VALID_EMAIL)
-    registration_page.fill_password(VALID_PASSWORD)
+    registration_page.fill_email(user.email)
+    registration_page.fill_password(user.password)
     registration_page.submit_registration()
     time.sleep(2)
     assert registration_page.get_alert_text() == "User already exist"
@@ -68,8 +66,9 @@ def test_registration_exists_user(driver):
 #-------5. Registered user can`t register with registered email and new valid password------
 def test_registration_valid_pwd_registered_email(driver):
     registration_page = RegistrationPage(driver)
+    user = exiting_user()
     registration_page.open_registration_form()
-    registration_page.fill_email(VALID_EMAIL)
+    registration_page.fill_email(user.email)
     registration_page.fill_password("AnnaAnna77!")
     registration_page.submit_registration()
 
