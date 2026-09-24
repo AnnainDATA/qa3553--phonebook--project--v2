@@ -1,5 +1,7 @@
 #pytest -v tests/test_registration.py
 import time
+
+from data.user_data import create_user
 from pages.registration_page import RegistrationPage
 from models.user import User
 
@@ -15,10 +17,7 @@ def generate_unique_email():
 #-------1. Unregistered user can register with valid data------
 def test_registration_success(driver):
     registration_page = RegistrationPage(driver)
-    user = User(
-        generate_unique_email(),
-        "123456!Anna"
-    )
+    user = create_user(email = generate_unique_email(), password = "123456!Anna")
     registration_page.open_registration_form()
     registration_page.fill_email(user.email)
     registration_page.fill_password(user.password)
@@ -30,10 +29,7 @@ def test_registration_success(driver):
 #-------2. Unregistered user can`t register with invalid email and valid password------
 def test_registration_wrong_email(driver):
     registration_page = RegistrationPage(driver)
-    user = User(
-        generate_unique_email(),
-        "123456!Anna"
-    )
+    user = create_user()
     registration_page.open_registration_form()
     registration_page.fill_email(f" {user.email}") #space before email
     registration_page.fill_password(user.password)

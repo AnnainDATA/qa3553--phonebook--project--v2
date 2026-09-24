@@ -1,3 +1,4 @@
+import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -24,7 +25,15 @@ class ContactPage(BasePage):
     def open_contact_form(self):
         #self.driver.find_element(*self.ADD_NAV_LINK).click()
         self.click(self.ADD_NAV_LINK)
-
+#-------------------------------------------
+    # def open_contact_list(self):
+    #     self.click(self.CONTACT_NAV_LINK)
+    #     WebDriverWait(self.driver,5).until(EC.url_contains("/contacts"))
+    #     time.sleep(2)
+    #
+    # def contact_cards_count(self,phone):
+    #     return len(self.driver.find_elements(By.XPATH,f"//h3[text()='{phone}']"))
+#-------------------------------------------
     def fill_name(self,name):
         # self.driver.find_element(*self.NAME_INPUT).clear()
         # self.driver.find_element(*self.NAME_INPUT).send_keys(name)
@@ -68,13 +77,18 @@ class ContactPage(BasePage):
         # self.driver.find_element(*self.SAVE_BTN).click()
         self.click(self.SAVE_BTN)
 
-    def contact_card_visible(self,phone):
-        locator = (By.XPATH,f"//h3[text()='{phone}']")
-        element = WebDriverWait(self.driver,5).until(
-            EC.presence_of_element_located(locator)
-        )
-        return element.is_displayed()
+    # def contact_card_visible(self,phone):
+    #     locator = (By.XPATH,f"//h3[text()='{phone}']")
+    #     element = WebDriverWait(self.driver,5).until(
+    #         EC.presence_of_element_located(locator)
+    #     )
+    #     return element.is_displayed()
+    #
+    # def open_contact_details(self,phone):
+    #     card = self.driver.find_element(By.XPATH,f"//h3[text()='{phone}']/...")
+    #     card.click()
 
-    def open_contact_details(self,phone):
-        card = self.driver.find_element(By.XPATH,f"//h3[text()='{phone}']/...")
-        card.click()
+    def is_add_button_active(self):
+        add_link = self.find(self.ADD_NAV_LINK)
+        return "active" in add_link.get_attribute("class")
+

@@ -16,7 +16,7 @@ class BasePage:
         self.find(locator).clear()
         self.find(locator).send_keys(value)
 
-#------for alert------
+#------methods for alert------
     def get_alert_text(self):
         alert=WebDriverWait(self.driver,timeout=5).until(
             EC.alert_is_present()
