@@ -1,6 +1,6 @@
 from faker import Faker
 from models.contact import Contact
-fake = Faker
+fake = Faker()
 
 def create_contact(name = None, last_name = None, phone = None, email = None, address = None, description = None):
     return Contact(
