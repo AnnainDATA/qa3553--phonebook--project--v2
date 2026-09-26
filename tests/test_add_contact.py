@@ -1,5 +1,6 @@
 #pytest -v tests/test_add_contact.py
 import pytest
+import logging
 from faker import Faker
 
 from data.contact_data import create_contact
@@ -8,10 +9,12 @@ from pages.add_contact_page import ContactPage
 from pages.contacts_page import ContactsPage
 
 fake = Faker()
+logger = logging.getLogger(__name__)
 
 #------POSITIVE------
 #------Successfully creating new contact with valid data------
 def test_add_contact_success_all_fields(authenticated_driver):
+    logger.info("Test: test_add_contact_success_all_fields")
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
     contact = create_contact()
@@ -117,3 +120,6 @@ def test_add_contact_duplicate_phone_rejected(authenticated_driver):
     add_contact_page.create_contact_steps(second_contact)
     contacts_page.open_contact_list()
     assert contacts_page.contact_cards_count(shared_phone) == 1
+
+
+

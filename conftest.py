@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 @pytest.fixture
 def driver():
+    logger.info("Starting browser session")
     driver=webdriver.Chrome()
     driver.implicitly_wait(5)
     driver.maximize_window()
@@ -22,12 +23,17 @@ def driver():
 
     yield driver
 
+    logger.info("Closing browser session")
+
     driver.quit()
 
 @pytest.fixture
 def authenticated_driver(driver):
     login_page = LoginPage(driver)
     user = exiting_user()
+
+    logger.info(f"Logging in user: {user.email}")
+
     login_page.open_login_form()
     login_page.fill_email(user.email)
     login_page.fill_password(user.password)
@@ -41,6 +47,11 @@ def ensure_min_contacts(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
     contacts_page.open_contact_list()
+
+    count = contacts_page.total_contacts_count()
+    if count<3:
+        logger.warning(f"Contact list has {count} contacts (<3), creating test data")
+
     while contacts_page.total_contacts_count()<5:
         contact = create_contact()
         add_contact_page.create_contact_steps(contact)

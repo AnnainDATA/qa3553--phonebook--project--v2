@@ -4,7 +4,8 @@ import logging
 def configure_logging():
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s-%(levelname)s-%(name)s-%(message)s"#,
-        # filename="test.log",
-        # filemode="a" #append
+        format="%(asctime)s-%(levelname)s-%(name)s-%(message)s",
+        #filename="test.log",
+        #filemode="a" #append
+                    #"w" - rewrite
     )

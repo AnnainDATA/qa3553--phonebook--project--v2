@@ -48,6 +48,7 @@ def test_edit_contact_last_name_updated(authenticated_driver):
 #--------------------------------------------------------------------
 #3.Registered user can edit an existing contact after entering valid data in [PHONE] field and save changes
 def test_edit_contact_phone_updated(authenticated_driver):
+    logger.info("Test: test_edit_contact_phone_updated")
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
 
@@ -55,7 +56,7 @@ def test_edit_contact_phone_updated(authenticated_driver):
     add_contact_page.create_contact_steps(contact)
     new_phone = fake.unique.numerify("050#######")
 
-    logger.debug(f"Oldd phone:{contact.phone}")
+    logger.debug(f"Old phone:{contact.phone}")
     logger.debug(f"New phone: {new_phone}")
 
     contacts_page.open_contact_details(contact.phone)
