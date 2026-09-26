@@ -9,6 +9,7 @@ class ContactsPage(BasePage):
     CONTACT_NAV_LINK = (By.CSS_SELECTOR, "[href = '/contacts']") #CONTACT BUTTON
     CONTACT_CARDS = (By.CLASS_NAME, "contact-item_card__2SOIM")  # CARD
     EDIT_BTN = (By.XPATH, "//button[text()='Edit']")
+    REMOVE_BTN = (By.XPATH, "//button[text()='Remove']") #REMOVE BUTTON
 
     EDIT_NAME_INPUT = (By.CSS_SELECTOR, "input[placeholder='Name']")
     EDIT_LAST_NAME_INPUT = (By.CSS_SELECTOR, "input[placeholder='Last Name']")
@@ -58,3 +59,23 @@ class ContactsPage(BasePage):
 
     def get_edit_contact(self,locator):
         return self.find(locator).get_attribute("value")
+
+    def remove_contact(self):
+        self.click(self.REMOVE_BTN)
+        time.sleep(3)
+
+    def all_contact_cards_count(self):
+        return len(self.driver.find_elements(By.CLASS_NAME, "contact-item_card__2SOIM"))
+
+    def open_first_contact(self):
+        cards = self.driver.find_elements(*self.CONTACT_CARDS)
+        first_card = cards[0]
+        first_card.click()
+
+    def total_contacts_count(self):
+        return len(self.driver.find_elements(*self.CONTACT_CARDS))
+
+    def delete_all_contacts(self):
+        while self.total_contacts_count() > 0:
+            self.open_first_contact()
+            self.remove_contact()

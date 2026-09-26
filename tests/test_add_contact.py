@@ -15,22 +15,14 @@ def test_add_contact_success_all_fields(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
     contact = create_contact()
-
-    add_contact_page.open_contact_form()
-    add_contact_page.fill_contact(contact)
-    add_contact_page.submit_contact()
-
+    add_contact_page.create_contact_steps(contact)
     assert contacts_page.contact_card_visible(contact.phone)
 
 def test_add_contact_success_required_fields(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
     contact = create_contact(description="")
-
-    add_contact_page.open_contact_form()
-    add_contact_page.fill_contact(contact)
-    add_contact_page.submit_contact()
-
+    add_contact_page.create_contact_steps(contact)
     assert contacts_page.contact_card_visible(contact.phone)
 
 #------NEGATIVE------
@@ -55,10 +47,11 @@ def test_add_contact_empty_last_name(authenticated_driver):
     contacts_page = ContactsPage(authenticated_driver)
     contact = create_contact(last_name="")
 
-    add_contact_page.open_contact_form()
-    add_contact_page.fill_contact(contact)
-    add_contact_page.submit_contact()
+    # add_contact_page.open_contact_form()
+    # add_contact_page.fill_contact(contact)
+    # add_contact_page.submit_contact()
 
+    add_contact_page.create_contact_steps(contact)
     assert add_contact_page.is_add_button_active()
     contacts_page.open_contact_list()
     assert contacts_page.contact_cards_count(contact.phone) == 0
@@ -69,10 +62,7 @@ def test_add_contact_empty_email(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
     contact = create_contact(email="")
-
-    add_contact_page.open_contact_form()
-    add_contact_page.fill_contact(contact)
-    add_contact_page.submit_contact()
+    add_contact_page.create_contact_steps(contact)
 
     assert add_contact_page.is_add_button_active()
     contacts_page.open_contact_list()
@@ -82,10 +72,7 @@ def test_add_contact_empty_address(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
     contact = create_contact(address="")
-
-    add_contact_page.open_contact_form()
-    add_contact_page.fill_contact(contact)
-    add_contact_page.submit_contact()
+    add_contact_page.create_contact_steps(contact)
 
     assert add_contact_page.is_add_button_active()
     contacts_page.open_contact_list()
@@ -95,10 +82,7 @@ def test_add_contact_invalid_phone(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
     contact = create_contact(phone="0504")
-
-    add_contact_page.open_contact_form()
-    add_contact_page.fill_contact(contact)
-    add_contact_page.submit_contact()
+    add_contact_page.create_contact_steps(contact)
 
     assert add_contact_page.get_alert_text().strip() == PHONE_ALERT_TEXT
     add_contact_page.accept_alert()
@@ -110,10 +94,7 @@ def test_add_contact_invalid_email(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
     contact = create_contact(email="invalid_format")
-
-    add_contact_page.open_contact_form()
-    add_contact_page.fill_contact(contact)
-    add_contact_page.submit_contact()
+    add_contact_page.create_contact_steps(contact)
 
     assert add_contact_page.get_alert_text().strip() == EMAIL_ALERT_TEXT
     add_contact_page.accept_alert()
@@ -130,15 +111,9 @@ def test_add_contact_duplicate_phone_rejected(authenticated_driver):
     first_contact = create_contact(phone = shared_phone)
     second_contact = create_contact(phone=shared_phone)
 
-    add_contact_page.open_contact_form()
-    add_contact_page.fill_contact(first_contact)
-    add_contact_page.submit_contact()
+    add_contact_page.create_contact_steps(first_contact)
     assert contacts_page.contact_card_visible(shared_phone)
 
-    add_contact_page.open_contact_form()
-    add_contact_page.fill_contact(second_contact)
-    add_contact_page.submit_contact()
-    #assert add_contact_page.contact_card_visible(shared_phone)
-
+    add_contact_page.create_contact_steps(second_contact)
     contacts_page.open_contact_list()
     assert contacts_page.contact_cards_count(shared_phone) == 1
