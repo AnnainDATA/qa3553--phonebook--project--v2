@@ -4,6 +4,7 @@ import logging
 from faker import Faker
 
 from data.contact_data import create_contact
+from data.contact_datasets import PHONE_ALERT_TEXT, EMAIL_ALERT_TEXT
 from models.contact import Contact
 from pages.add_contact_page import ContactPage
 from pages.contacts_page import ContactsPage
@@ -29,9 +30,6 @@ def test_add_contact_success_required_fields(authenticated_driver):
     assert contacts_page.contact_card_visible(contact.phone)
 
 #------NEGATIVE------
-PHONE_ALERT_TEXT = "Phone not valid: Phone number must contain only digits! And length min 10, max 15!"
-EMAIL_ALERT_TEXT = "Email not valid: must be a well-formed email address"
-
 def test_add_contact_empty_name(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
@@ -81,10 +79,33 @@ def test_add_contact_empty_address(authenticated_driver):
     contacts_page.open_contact_list()
     assert contacts_page.contact_cards_count(contact.phone) == 0
 
-def test_add_contact_invalid_phone(authenticated_driver):
+
+@pytest.mark.parametrize(
+    "phone",
+    ["055898",
+     "05589899991111222225555",
+     "#0558989999",
+     "helloworld",
+     "055898hello",
+     "hello055898",
+     "055898world88",
+     "##!!@@##^^",
+     "0558985566##",
+     "##0558985566",
+     "055898$$5566",
+     "0558988899 0558986655"
+     "0558988899,0558986655",
+     "          ",
+     "",
+     "  0558988899",
+     "0558988899   ",
+     "055898   8899"
+     ]
+)
+def test_add_contact_invalid_phone(authenticated_driver,phone):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
-    contact = create_contact(phone="0504")
+    contact = create_contact(phone=phone)
     add_contact_page.create_contact_steps(contact)
 
     assert add_contact_page.get_alert_text().strip() == PHONE_ALERT_TEXT
@@ -93,10 +114,30 @@ def test_add_contact_invalid_phone(authenticated_driver):
     contacts_page.open_contact_list()
     assert contacts_page.contact_cards_count(contact.phone) == 0
 
-def test_add_contact_invalid_email(authenticated_driver):
+@pytest.mark.parametrize(
+    "field, value, expected_alert",
+        [
+        ("email","",EMAIL_ALERT_TEXT),
+        ("email","simon@@gmail.com",EMAIL_ALERT_TEXT),
+        ("email","simongmail.com",EMAIL_ALERT_TEXT),
+        ("email","simon@gmail",EMAIL_ALERT_TEXT),
+        ("email","simon1@",EMAIL_ALERT_TEXT),
+        ("email","simonsimonsimonsimonsimonsimonsimonsimon@gmail.com",EMAIL_ALERT_TEXT),
+        ("email","simon@gmailgmail.com",EMAIL_ALERT_TEXT),
+        ("email","s@g",EMAIL_ALERT_TEXT),
+        ("email","gmail.com@סימון",EMAIL_ALERT_TEXT),
+        ("email","  simon@gmail.com",EMAIL_ALERT_TEXT),
+("email","simon@gmail.com   ",EMAIL_ALERT_TEXT),
+("email","##@gmail.com",EMAIL_ALERT_TEXT),
+("email","%%!!@gmail.com",EMAIL_ALERT_TEXT),
+("email","simon@gmail.com simon@gmail.com",EMAIL_ALERT_TEXT),
+("email","simon@gmail.comsimon@gmail.com",EMAIL_ALERT_TEXT)
+         ]
+)
+def test_add_contact_invalid_email(authenticated_driver,field,value,expected_alert):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
-    contact = create_contact(email="invalid_format")
+    contact = create_contact(**{field:value})
     add_contact_page.create_contact_steps(contact)
 
     assert add_contact_page.get_alert_text().strip() == EMAIL_ALERT_TEXT

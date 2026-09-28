@@ -13,7 +13,7 @@ from utils.logger_config import configure_logging
 configure_logging()
 logger = logging.getLogger(__name__)
 
-@pytest.fixture
+@pytest.fixture (scope = "function")
 def driver():
     logger.info("Starting browser session")
     driver=webdriver.Chrome()
