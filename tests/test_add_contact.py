@@ -14,11 +14,15 @@ logger = logging.getLogger(__name__)
 
 #------POSITIVE------
 #------Successfully creating new contact with valid data------
+@pytest.mark.smoke
+@pytest.mark.regression
 def test_add_contact_success_all_fields(authenticated_driver):
     logger.info("Test: test_add_contact_success_all_fields")
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
     contact = create_contact()
+
+    logger.info("Testing contact creation: description = %s, phone = %s", contact.description, contact.phone)
     add_contact_page.create_contact_steps(contact)
     assert contacts_page.contact_card_visible(contact.phone)
 
@@ -35,6 +39,7 @@ def test_add_contact_empty_name(authenticated_driver):
     contacts_page = ContactsPage(authenticated_driver)
     contact = create_contact(name="")
 
+    logger.info("Testing contact creation with empty name: phone=%s", contact.phone)
     add_contact_page.open_contact_form()
     add_contact_page.fill_contact(contact)
     add_contact_page.submit_contact()
@@ -47,6 +52,8 @@ def test_add_contact_empty_last_name(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
     contact = create_contact(last_name="")
+
+    logger.info("Testing contact creation with empty last name: phone=%s", contact.phone)
 
     # add_contact_page.open_contact_form()
     # add_contact_page.fill_contact(contact)
@@ -63,6 +70,8 @@ def test_add_contact_empty_email(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
     contact = create_contact(email="")
+
+    logger.info("Testing contact creation with empty email: phone=%s", contact.phone)
     add_contact_page.create_contact_steps(contact)
 
     assert add_contact_page.is_add_button_active()
@@ -77,9 +86,11 @@ def test_add_contact_empty_address(authenticated_driver):
 
     assert add_contact_page.is_add_button_active()
     contacts_page.open_contact_list()
+
+    logger.info("Testing contact creation with empty address: phone=%s", contact.phone)
     assert contacts_page.contact_cards_count(contact.phone) == 0
 
-
+@pytest.mark.regression
 @pytest.mark.parametrize(
     "phone",
     ["055898",
@@ -127,17 +138,19 @@ def test_add_contact_invalid_phone(authenticated_driver,phone):
         ("email","s@g",EMAIL_ALERT_TEXT),
         ("email","gmail.com@סימון",EMAIL_ALERT_TEXT),
         ("email","  simon@gmail.com",EMAIL_ALERT_TEXT),
-("email","simon@gmail.com   ",EMAIL_ALERT_TEXT),
-("email","##@gmail.com",EMAIL_ALERT_TEXT),
-("email","%%!!@gmail.com",EMAIL_ALERT_TEXT),
-("email","simon@gmail.com simon@gmail.com",EMAIL_ALERT_TEXT),
-("email","simon@gmail.comsimon@gmail.com",EMAIL_ALERT_TEXT)
+        ("email","simon@gmail.com   ",EMAIL_ALERT_TEXT),
+        ("email","##@gmail.com",EMAIL_ALERT_TEXT),
+        ("email","%%!!@gmail.com",EMAIL_ALERT_TEXT),
+        ("email","simon@gmail.com simon@gmail.com",EMAIL_ALERT_TEXT),
+        ("email","simon@gmail.comsimon@gmail.com",EMAIL_ALERT_TEXT)
          ]
 )
 def test_add_contact_invalid_email(authenticated_driver,field,value,expected_alert):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
-    contact = create_contact(**{field:value})
+    contact = create_contact(**{field:value}) #!!!
+
+    logger.info("Testing invalid contact field: field=%s, phone=%s", field,contact.phone)
     add_contact_page.create_contact_steps(contact)
 
     assert add_contact_page.get_alert_text().strip() == EMAIL_ALERT_TEXT

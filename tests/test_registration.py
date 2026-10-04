@@ -1,9 +1,13 @@
 #pytest -v tests/test_registration.py
 import time
 
+import logging
+
 from data.user_data import create_user, exiting_user, invalid_email_user, invalid_password_user
 from pages.registration_page import RegistrationPage
 from models.user import User
+
+logger = logging.getLogger(__name__)
 
 VALID_EMAIL="anna12345@gmail.com"
 VALID_PASSWORD="123456!Anna"
@@ -18,6 +22,9 @@ def generate_unique_email():
 def test_registration_success(driver):
     registration_page = RegistrationPage(driver)
     user = exiting_user()
+
+    logger.info("Testing successful registration: username = %s", user.email)
+
     registration_page.open_registration_form()
     registration_page.fill_email(generate_unique_email())
     registration_page.fill_password(user.password)
@@ -54,6 +61,8 @@ def test_registration_wrong_password(driver):
 def test_registration_exists_user(driver):
     registration_page = RegistrationPage(driver)
     user = exiting_user()
+
+    logger.info("Testing registration of existing user: username = %s", user.email)
 
     registration_page.open_registration_form()
     registration_page.fill_email(user.email)

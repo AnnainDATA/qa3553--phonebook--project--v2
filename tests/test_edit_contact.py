@@ -1,6 +1,6 @@
 import time
-import logging
 import pytest
+import logging
 from faker import Faker
 from data.contact_data import create_contact
 from pages.add_contact_page import ContactPage
@@ -19,6 +19,8 @@ def test_edit_contact_name_updated(authenticated_driver):
     add_contact_page.create_contact_steps(contact)
     new_name = fake.first_name()
 
+    logger.info("Updating contact field: field = name, phone = %s, new_value = %s",contact.phone, new_name )
+
     contacts_page.open_contact_details(contact.phone)
     contacts_page.open_edit_mode()
     contacts_page.set_edit_field(contacts_page.EDIT_NAME_INPUT, new_name)
@@ -36,6 +38,10 @@ def test_edit_contact_last_name_updated(authenticated_driver):
     add_contact_page.create_contact_steps(contact)
     new_last_name = fake.last_name()
 
+    logger.info("Updating contact field: field = last_name, phone = %s, new_value=%s",
+                contact.phone,
+                new_last_name)
+
     contacts_page.open_contact_details(contact.phone)
     contacts_page.open_edit_mode()
     contacts_page.set_edit_field(contacts_page.EDIT_LAST_NAME_INPUT, new_last_name)
@@ -47,6 +53,8 @@ def test_edit_contact_last_name_updated(authenticated_driver):
 
 #--------------------------------------------------------------------
 #3.Registered user can edit an existing contact after entering valid data in [PHONE] field and save changes
+@pytest.mark.smoke
+@pytest.mark.regression
 def test_edit_contact_phone_updated(authenticated_driver):
     logger.info("Test: test_edit_contact_phone_updated")
     add_contact_page = ContactPage(authenticated_driver)
@@ -58,6 +66,10 @@ def test_edit_contact_phone_updated(authenticated_driver):
 
     logger.debug(f"Old phone:{contact.phone}")
     logger.debug(f"New phone: {new_phone}")
+
+    logger.info("Updating contact field: field = phone, old_phone = %s, new_phone=%s",
+                contact.phone,
+                new_phone)
 
     contacts_page.open_contact_details(contact.phone)
     contacts_page.open_edit_mode()
@@ -76,6 +88,10 @@ def test_edit_contact_email_updated(authenticated_driver):
     contact = create_contact()
     add_contact_page.create_contact_steps(contact)
     new_email = fake.unique.email()
+
+    logger.info("Updating contact field: field = email, phone = %s, new_value=%s",
+                contact.phone,
+                new_email)
 
     contacts_page.open_contact_details(contact.phone)
     contacts_page.open_edit_mode()
@@ -96,6 +112,10 @@ def test_edit_contact_address_updated(authenticated_driver):
     add_contact_page.create_contact_steps(contact)
     new_address = fake.city()
 
+    logger.info("Updating contact field: field = address, phone = %s, new_value=%s",
+                contact.phone,
+                new_address)
+
     contacts_page.open_contact_details(contact.phone)
     contacts_page.open_edit_mode()
     contacts_page.set_edit_field(contacts_page.EDIT_ADDRESS_INPUT, new_address)
@@ -115,6 +135,10 @@ def test_edit_contact_description_updated(authenticated_driver):
     contact = create_contact()
     add_contact_page.create_contact_steps(contact)
     new_description = fake.sentence()
+
+    logger.info("Updating contact field: field = description, phone = %s, new_value=%s",
+                contact.phone,
+                new_description)
 
     contacts_page.open_contact_details(contact.phone)
     contacts_page.open_edit_mode()
@@ -173,6 +197,10 @@ def test_edit_contact_empty_last_name_negative(authenticated_driver):
     contact = create_contact()
     add_contact_page.create_contact_steps(contact)
 
+    logger.info("Testing empty edited empty last name: phone = %s",
+                contact.phone,
+                )
+
     contacts_page.open_contact_details(contact.phone)
     time.sleep(3)
     contacts_page.open_edit_mode()
@@ -191,6 +219,10 @@ def test_edit_contact_empty_phone_negative(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contact = create_contact()
     add_contact_page.create_contact_steps(contact)
+
+    logger.info("Testing empty edited empty phone: phone = %s",
+                contact.phone,
+                )
 
     contacts_page.open_contact_details(contact.phone)
     time.sleep(3)
@@ -219,6 +251,7 @@ INVALID_EMAILS = [
     "simon@gmail.com simon@gmail.com",
     "simon@gmail.comsimon@gmail.com"
 ]
+@pytest.mark.regression
 @pytest.mark.parametrize("invalid_email", INVALID_EMAILS)
 # 4. Registered user can’t edit an existing contact with field blank or with incorrect data in field [EMAIL]
 def test_edit_contact_empty_email_negative(authenticated_driver,invalid_email):
@@ -265,6 +298,10 @@ def test_edit_contact_duplicate_phone_negative(authenticated_driver):
     existing_contact = create_contact()
     other_contact = create_contact()
 
+    logger.info("Testing duplicate edited phone: existing_phone=%s, other_phone=%s",
+                existing_contact.phone,
+                other_contact.phone)
+
     add_contact_page.create_contact_steps(existing_contact)
     time.sleep(3)
     add_contact_page.create_contact_steps(other_contact)
@@ -288,6 +325,10 @@ def test_edit_contact_duplicate_email_negative(authenticated_driver):
 
     existing_contact = create_contact()
     other_contact = create_contact()
+
+    logger.info("Testing duplicate edited email: existing_phone=%s, other_phone=%s",
+                existing_contact.phone,
+                other_contact.phone)
 
     add_contact_page.create_contact_steps(existing_contact)
     time.sleep(3)
