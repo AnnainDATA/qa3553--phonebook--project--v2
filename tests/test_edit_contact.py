@@ -1,6 +1,10 @@
 import time
+
+import allure
 import pytest
 import logging
+
+from allure_pytest.utils import allure_title
 from faker import Faker
 from data.contact_data import create_contact
 from pages.add_contact_page import ContactPage
@@ -11,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 #-------------POSITIVE---------------------
 #1.Registered user can edit an existing contact after entering valid data in [NAME] field and save changes
+@allure.title("Registered user can edit an existing contact after entering valid data in [NAME] field and save changes")
 def test_edit_contact_name_updated(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
@@ -30,6 +35,7 @@ def test_edit_contact_name_updated(authenticated_driver):
 
 #--------------------------------------------------------------------
 #2.Registered user can edit an existing contact after entering valid data in [LAST NAME] field and save changes
+@allure.title("Registered user can edit an existing contact after entering valid data in [LAST NAME] field and save changes")
 def test_edit_contact_last_name_updated(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
@@ -55,6 +61,7 @@ def test_edit_contact_last_name_updated(authenticated_driver):
 #3.Registered user can edit an existing contact after entering valid data in [PHONE] field and save changes
 @pytest.mark.smoke
 @pytest.mark.regression
+@allure.title("Registered user can edit an existing contact after entering valid data in [PHONE] field and save changes")
 def test_edit_contact_phone_updated(authenticated_driver):
     logger.info("Test: test_edit_contact_phone_updated")
     add_contact_page = ContactPage(authenticated_driver)
@@ -81,6 +88,7 @@ def test_edit_contact_phone_updated(authenticated_driver):
 
 #--------------------------------------------------------------------
 #4.Registered user can edit an existing contact after entering valid data in [EMAIL] field and save changes
+@allure.title("Registered user can edit an existing contact after entering valid data in [EMAIL] field and save changes")
 def test_edit_contact_email_updated(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
@@ -104,6 +112,7 @@ def test_edit_contact_email_updated(authenticated_driver):
 
 #--------------------------------------------------------------------
 #5.Registered user can edit an existing contact after entering valid data in [ADDRESS] field and save changes
+@allure.title("Registered user can edit an existing contact after entering valid data in [ADDRESS] field and save changes")
 def test_edit_contact_address_updated(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
@@ -128,6 +137,7 @@ def test_edit_contact_address_updated(authenticated_driver):
 #--------------------------------------------------------------------
 #6.Registered user can edit an existing contact after entering valid data in [DESCRIPTION] field and save changes
 @pytest.mark.skip(reason="BUG-130: Editing description saves literal string '[Object Undefined]'")
+@allure.title("Registered user can edit an existing contact after entering valid data in [DESCRIPTION] field and save changes")
 def test_edit_contact_description_updated(authenticated_driver):
     add_contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)

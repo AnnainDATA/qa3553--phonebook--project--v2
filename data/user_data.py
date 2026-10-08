@@ -1,5 +1,7 @@
 from faker import Faker
 from models.user import User
+from utils.config import EXITING_USER_EMAIL, EXITING_USER_PASSWORD
+
 fake = Faker()
 
 def create_user(email = None, password = None):
@@ -10,8 +12,8 @@ def create_user(email = None, password = None):
         )
     )
 
-EXITING_USER_EMAIL = "anna12345@gmail.com"
-EXITING_USER_PASSWORD = "123456!Anna"
+# EXITING_USER_EMAIL = "anna12345@gmail.com"
+# EXITING_USER_PASSWORD = "123456!Anna"
 
 INVALID_EMAIL = "anna12345gmail.com"
 INVALID_PASSWORD = "000"

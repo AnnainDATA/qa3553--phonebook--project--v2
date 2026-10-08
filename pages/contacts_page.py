@@ -19,13 +19,11 @@ class ContactsPage(BasePage):
     EDIT_EMAIL_INPUT = (By.CSS_SELECTOR, "input[placeholder='email']")
     EDIT_ADDRESS_INPUT = (By.CSS_SELECTOR, "input[placeholder='Address']")
     EDIT_DESCRIPTION_INPUT = (By.CSS_SELECTOR, "input[placeholder='desc']")
-
     EDIT_SAVE_BTN = (By.XPATH, "//button[text()='Save']")
 
     def open_contact_list(self):
         self.click(self.CONTACT_NAV_LINK)
-        WebDriverWait(self.driver,5).until(EC.url_contains("/contacts"))
-        time.sleep(2)
+        self.wait_until_url_matches(r"/contacts$")
 
     def contact_cards_count(self,phone):
         return len(self.driver.find_elements(By.XPATH,f"//h3[text()='{phone}']"))
@@ -41,10 +39,7 @@ class ContactsPage(BasePage):
 
     def contact_card_visible(self,phone):
         locator = (By.XPATH,f"//h3[text()='{phone}']")
-        element = WebDriverWait(self.driver,5).until(
-            EC.presence_of_element_located(locator)
-        )
-        return element.is_displayed()
+        return self.wait_until_visible(locator).is_displayed()
 
     def open_edit_mode(self):
         logger.info(f"Opening edit mode")
@@ -68,7 +63,7 @@ class ContactsPage(BasePage):
     def remove_contact(self):
         logger.info("Deleting contact")
         self.click(self.REMOVE_BTN)
-        time.sleep(3)
+        self.wait_until_url_matches(r"/contacts$")
 
     def all_contact_cards_count(self):
         return len(self.driver.find_elements(By.CLASS_NAME, "contact-item_card__2SOIM"))
