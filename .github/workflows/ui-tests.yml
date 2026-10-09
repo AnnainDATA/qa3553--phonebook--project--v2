@@ -1,20 +1,19 @@
 name: UI Tests
 
 on:
-  workflow_dispatch: #запустить вручную нажатием кнопки на гитхаб
+  workflow_dispatch:
 
-jobs: #список работ
-  test-chrome: #название работы
-    runs-on: ubuntu-latest #запусти на своем виртуальном компьютере, возьми чистую временнную версию линукс
+jobs:
+  test-chrome:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4 #минус это один шаг
+      - uses: actions/checkout@v4
 
-      - uses: action/setup-python@v7
+      - uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
-#устанавливаем пакеты
-      - run: pip install -r requirements.txt #виртуальная машину установи все что записано в файле рекваиренментс
+      - run: pip install -r requirements.txt
 
       - run: pytest tests/test_login.py --browser=chrome --headless
