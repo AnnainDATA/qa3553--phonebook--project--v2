@@ -21,7 +21,7 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           EXITING_USER_EMAIL: ${{ secrets.EXITING_USER_EMAIL }}
           EXITING_USER_PASSWORD: ${{ secrets.EXITING_USER_PASSWORD }}
-        run: pytest tests/test_login.py --browser=chrome --headless --alluredir=allure-results
+        run: pytest --browser=chrome --headless --alluredir=allure-results
 
       - name: Upload diagnostics (Chrome)
         if: always()
