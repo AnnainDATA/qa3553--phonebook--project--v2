@@ -22,3 +22,24 @@ jobs:
           EXITING_USER_EMAIL: ${{ secrets.EXITING_USER_EMAIL }}
           EXITING_USER_PASSWORD: ${{ secrets.EXITING_USER_PASSWORD }}
         run: pytest tests/test_login.py --browser=chrome --headless
+
+
+  test-firefox: # воркфлоу состоит из джобов/ первый джоб в firefox
+    runs-on: ubuntu-latest # запусти на своем виртуальном компьютере
+
+    steps: # шаги
+      - uses: actions/checkout@v4 # дефис в начале это один шаг
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14" # уазать версию нашего пайтона
+
+      - run: pip install -r requirements.txt
+
+      - name: Run UI tests (Firefox)
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          EXITING_USER_EMAIL: ${{ secrets.EXITING_USER_EMAIL }}
+          EXITING_USER_PASSWORD: ${{ secrets.EXITING_USER_PASSWORD }}
+        run: pytest tests/test_login.py --browser=firefox --headless
+# -------------------------------------------------------------------------
