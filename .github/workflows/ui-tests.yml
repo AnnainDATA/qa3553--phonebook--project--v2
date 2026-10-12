@@ -21,7 +21,18 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           EXITING_USER_EMAIL: ${{ secrets.EXITING_USER_EMAIL }}
           EXITING_USER_PASSWORD: ${{ secrets.EXITING_USER_PASSWORD }}
-        run: pytest tests/test_login.py --browser=chrome --headless
+        run: pytest tests/test_login.py --browser=chrome --headless --alluredir=allure-results
+
+      - name: Upload diagnostics (Chrome)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-diagnostics
+          path: |
+            logs/
+            screenshots/
+            allure-results/
+          if-no-files-found: ignore
 
 
   test-firefox: # воркфлоу состоит из джобов/ первый джоб в firefox
@@ -41,5 +52,16 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           EXITING_USER_EMAIL: ${{ secrets.EXITING_USER_EMAIL }}
           EXITING_USER_PASSWORD: ${{ secrets.EXITING_USER_PASSWORD }}
-        run: pytest tests/test_login.py --browser=firefox --headless
+        run: pytest tests/test_login.py --browser=firefox --headless --alluredir=allure-results
+
+      - name: Upload diagnostics (Firefox)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-diagnostics
+          path: |
+            logs/
+            screenshots/
+            allure-results/
+          if-no-files-found: ignore
 # -------------------------------------------------------------------------
