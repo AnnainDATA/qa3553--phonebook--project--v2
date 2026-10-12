@@ -1,18 +1,18 @@
-name: UI Tests
+name: UI Tests # ключ: значение
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # гитхаб должен знать когда выполнять инструкцию / запустить вручную
 
 jobs:
-  test-chrome:
-    runs-on: ubuntu-latest
+  test-chrome: # воркфлоу состоит из джобов/ первый джоб в Хроме
+    runs-on: ubuntu-latest # запусти на своем виртуальном компьютере
 
-    steps:
-      - uses: actions/checkout@v4
+    steps: # шаги
+      - uses: actions/checkout@v4 # дефис в начале это один шаг
 
       - uses: actions/setup-python@v7
         with:
-          python-version: "3.14"
+          python-version: "3.14" # уазать версию нашего пайтона
 
       - run: pip install -r requirements.txt
 
